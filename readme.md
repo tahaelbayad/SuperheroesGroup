@@ -220,4 +220,6 @@ perf script | ../FlameGraph/stackcollapse-perf.pl > out.perf-folded
 ../FlameGraph/flamegraph.pl out.perf-folded > perf.svg
 
 ```
+This is what we got so far:
+
 ![](perf.svg)
