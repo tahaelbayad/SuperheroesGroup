@@ -85,11 +85,13 @@ Sifives:
 |    260k    |   -Ofast               |    718.309859   |
 
 | parameters |   flags                |  tok/s          |
+| ------     |    -----               | -----           |
 |   15M      |   -O3                  |  4.786056       |
 |   15M      |   -O3 -fopenmp         |  16.980146      | 
 |   15M      |   -Ofast               |  17.170330      |
 
 | parameters |   flags                |  tok/s          |
+| ------     |    -----               | -----           |
 |   42M      |   -O3                  | 1.768644        | 
 |   42M      |   -O3 -fopenmp         |      6.462453   |
 |   42M      |   -Ofast               |   6.486090      | 
@@ -104,11 +106,13 @@ Milkvs:
 |   260k     |   -Ofast               |  580.865604     |
 
 | parameters |   flags                |  tok/s          |
+| ------     |    -----               | -----           |
 |   15M      |   -O3                  |  35.754347      |
 |   15M      |   -O3 -fopenmp         |  158.385093     | 
 |   15M      |   -Ofast               |  161.616162     |
 
 | parameters |   flags                |  tok/s          |
+| ------     |    -----               | -----           |
 |   42M      |   -O3                  |    14.027087    | 
 |   42M      |   -O3 -fopenmp         |   39.293380     |
 |   42M      |   -Ofast               |   38.860104     | 
