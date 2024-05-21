@@ -216,3 +216,4 @@ perf script | ../FlameGraph/stackcollapse-perf.pl > out.perf-folded
 
 ```
 
+![](perf.svg)
