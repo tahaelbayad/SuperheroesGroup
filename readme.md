@@ -197,7 +197,7 @@ gcc -g -O3 -fopenmp -o run run.c -lm
 We applied the same reasoning for 42M and 110M models.
 
 
-#### Profiling with Flamegraph
+### Profiling with Flamegraph
 
 to get a more readable output data, we proceeded as follows to represent the data as flamegraph:
 
