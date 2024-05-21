@@ -1,5 +1,5 @@
 
-# MCimone perf characterization project
+# Monte Cimone performance characterization project
 
 ## Llama2 compilation on MonteCimone 
 
