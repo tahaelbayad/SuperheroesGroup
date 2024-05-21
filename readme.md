@@ -215,5 +215,4 @@ perf script | ../FlameGraph/stackcollapse-perf.pl > out.perf-folded
 ../FlameGraph/flamegraph.pl out.perf-folded > perf.svg
 
 ```
-
-![](perf.svg)
+<center><img src="perf.svg" width= "700" height = "200" /></center>
