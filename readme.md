@@ -121,9 +121,12 @@ First perf command we tried is **perf stat**.
 
 Considering Sifives, we run perf stat to all models and collected the outcomes:
 
-just perf stat ./run stories
+```bash 
+perf stat ./run stories15M.bin
 
+```
 15M model:
+
          72184.53 msec task-clock                       #   43.524 CPUs utilized
              30397      context-switches                 #  421.101 /sec
               2529      cpu-migrations                   #   35.035 /sec
@@ -133,6 +136,8 @@ just perf stat ./run stories
        63810539123      branches                         #  883.992 M/sec
           29783265      branch-misses                    #    0.05% of all branches
 
+
+Same for 42M and 110M:
 
 42M model:
 
@@ -215,4 +220,4 @@ perf script | ../FlameGraph/stackcollapse-perf.pl > out.perf-folded
 ../FlameGraph/flamegraph.pl out.perf-folded > perf.svg
 
 ```
-<center><img src="perf.svg" width= "700" height = "200" /></center>
+![](perf.svg)
