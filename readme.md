@@ -120,7 +120,7 @@ Milkvs:
 
 ## Performance characterization
 
-### Perf stat
+### Performance overview with Perf stat
 First perf command we tried is **perf stat**.
 
 Considering Sifives, we run perf stat to all models and collected the outcomes:
@@ -166,11 +166,11 @@ for 110M:
          146621514      branch-misses                    #    0.06% of all branches
 
 
-### Perf record
+### Recording with Perf Record
 
 Note: we coudln't execute perf record command on sifive nodes.
 
-So far, we tried the following command:
+So far, we tried the following commands:
 
 ```bash 
 
@@ -197,7 +197,7 @@ gcc -g -O3 -fopenmp -o run run.c -lm
 We applied the same reasoning for 42M and 110M models.
 
 
-#### Flamegraph
+#### Profiling with Flamegraph
 
 to get a more readable output data, we proceeded as follows to represent the data as flamegraph:
 
