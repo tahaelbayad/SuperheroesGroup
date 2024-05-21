@@ -38,7 +38,7 @@ To compile llama we moved from login node to sifive or milkv nodes (we compiled 
 ```bash 
 srun -p mcimone-milkvs -t 00:05:00 --pty bash
 ```
-or 
+or asdòlaskdòlaskdas
 
 ```bash 
 srun -p mcimone-nodes -t 00:05:00 --pty bash
