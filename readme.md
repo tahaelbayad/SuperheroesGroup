@@ -92,7 +92,7 @@ Running it on MILKV machines (64 cores) leads to better results:
 |   42M      |   -O3 -fopenmp         |   39.293380     |
 |   42M      |   -Ofast               |   38.860104     | 
 
-We collected all the outcomes and produced some graphs in plots.
+We collected all the outcomes and produced some graphs in plots.ipynb.
 
 ## Performance characterization
 
