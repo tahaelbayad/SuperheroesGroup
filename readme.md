@@ -177,8 +177,11 @@ and produce the flamegprah
 ```bash 
 ../FlameGraph/flamegraph.pl out.perf-folded > perf.svg
 ```
-
-We provided two flamegraph examples, a first one we run Llama on all 64 cores and a second one where we run it concurrently on a single core:
+Example 1:
+A first example, where we run llama on all 64 cores:
 ![](img/15M_par.svg)
+
+Example 2:
+A second one where instead we run llama on a single core:
 ![](img/15M_nopar.svg)
 
