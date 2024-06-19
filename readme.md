@@ -92,7 +92,7 @@ Running it on MILKV machines (64 cores) leads to better results:
 |   42M      |   -O3 -fopenmp         |   39.293380     |
 |   42M      |   -Ofast               |   38.860104     | 
 
-For a better visualization we provided a notebook with some plots (see plots folder).
+We collected all the outcomes and produced some graphs in the plots folder.
 
 ## Performance characterization
 
@@ -159,7 +159,7 @@ perf report
 ## Profiling with Flamegraph
 In addition, we can use the perf command to sample the stack of all processes and produce a flamegraph.
 
-To do so, we clone his repo:
+To do so, we clone Brendan Gregg's repo:
 ```bash 
 git clone https://github.com/brendangregg/FlameGraph
 ```
