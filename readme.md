@@ -37,7 +37,7 @@ For Sifive nodes (4 cores)
 srun -p mcimone-nodes -t 00:05:00 --pty bash
 ```
 
-Now can compile and play with Llama2:
+Now we can compile and play with Llama2:
 
 ```bash 
 gcc -o run run.c -lm
@@ -143,47 +143,42 @@ for 110M:
 For what about the 64-cores nodes, we can exploit perf record command, sampling the events we want as shown:
 
 ```bash 
-
 perf record -g -e cycles -- ./run stories15M.bin
-
 ```
 
 ```bash 
-
 perf record -g -e instructions -- ./run stories15M.bin
-
 ```
 
 To read the outcome:
 
 ```bash 
-
 perf report
-
 ```
 
 ## Profiling with Flamegraph
 In addition, we can use the perf command to sample the stack of all processes and produce a flamegraph.
 
-We clone brendan Gregg repo:
+To do so, we clone his repo:
 ```bash 
 git clone https://github.com/brendangregg/FlameGraph
 ```
 
-we sample the stack:
+then sample the stack:
 ```bash 
 perf record -g -e cycles -- ./run stories15M.bin
 ```
 
-we collapse the stack with Brendan Gregg's scripts
+collapse the stack with Brendan Gregg's scripts
 ```bash 
 perf script | ../FlameGraph/stackcollapse-perf.pl > out.perf-folded
 ```
-we produce the flamegprah
+and produce the flamegprah
 ```bash 
 ../FlameGraph/flamegraph.pl out.perf-folded > perf.svg
 ```
 
 We provided two flamegraph examples, a first one we run Llama on all 64 cores and a second one where we run it concurrently on a single core:
 
-![](perf.svg)
+![](img/15M_nopar.svg)
+![](img/15M_par.svg)
