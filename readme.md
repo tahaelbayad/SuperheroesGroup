@@ -1,88 +1,70 @@
 
-# Monte Cimone performance characterization project
+# Llama2 on Montecimone RISCV HPC System
+This lab project merges two of the ideas that has been proposed in Lab of Big Data architectures course, which are LLMs and RISCV HPC performance characterization.
 
-## Llama2 compilation on MonteCimone 
+## Access to MonteCimone
+First, let us access to our HPC system, called Montecimone, through ssh:
+```bash 
+ssh username@beta.dei.unibo.it -p 2223 
+```
+(you first need to request username and password)
 
-### Set up
+After that we accessed in the login node, which is x86 architecture, while for RISCV nodes we will rely on Slurm system that manages accesses on all RISCV machines.
 
-Firstly, to set up everything we need for the compilation, we all cloned Karpathy's repository as follows:
-
+## Getting Llama2
+Now we can clone Karpathy's repo to get his Llama2 model written in pure C language:
 ```bash 
 git clone https://github.com/karpathy/llama2.c.git
-```
-and entered to llama2 folder
-```bash 
 cd llama2.c
-
 ```
-
-From now on, each of us worked on a different model: I decided to work on the one with 260K parameters, Lorenza with 15M, Luca with 42M and Raffaele with 110M.
-
-In my case, i got the 260K parameters model as follows:
-
-```bash 
-wget https://huggingface.co/karpathy/tinyllamas/resolve/main/stories260K/stories260K.bin
-```
-
-For the 15M model:
-
-```bash 
+Then, we get all his pretrained models:
+```bash
 wget https://huggingface.co/karpathy/tinyllamas/resolve/main/stories15M.bin
+wget https://huggingface.co/karpathy/tinyllamas/resolve/main/stories42M.bin
+wget https://huggingface.co/karpathy/tinyllamas/resolve/main/stories110M.bin
 ```
-and so on for the others.
 
+## Llama2 inference
+Before compilation, we move to our RISCV machines through Slurm commands, like this ones:
 
-### Compilation:
-
-This first part was straightforward, we just followed what was written in Karpathy's repo. To compile llama we moved from the login node to sifive or milkv nodes. Usually, this is done with the following command:
-
+For MILVS nodes (64 cores)
 ```bash 
 srun -p mcimone-milkvs -t 00:05:00 --pty bash
 ```
-For Sifive nodes instead:
+For Sifive nodes (4 cores)
 
 ```bash 
 srun -p mcimone-nodes -t 00:05:00 --pty bash
 ```
 
-For what concerns the compilation, we compiled llama with different compiler flags:
-
-- -O3 flag: 
+Now can compile and play with Llama2:
 
 ```bash 
-gcc -O3 -o run run.c -lm
+gcc -o run run.c -lm
+./run stories15M.bin
 ```
 
-- -fopenmp for enabling parallelism:
+(same reasoning for 42M and 110M)
+
+In addition, we can prompt the model with some inputs, like:
+```bash
+./run stories42M.bin -t 0.8 -n 256 -i "One day, prof Andrea met superheroes"
+```
+
+## Analyzing the outcome
+Karpathy has already provided a performance metric as output, which is token/seconds. Let us add and some compiler flags to speed it up:
+
+-fopenmp for enabling parallelism and -O3 or -Ofast for optimizations:
+```bash 
+gcc -Ofast -fopenmp -o run run.c -lm
+```
+or
 
 ```bash 
 gcc -O3 -fopenmp -o run run.c -lm
 ```
 
-- -Ofast for ruther optimization:
-
-```bash 
-gcc -O3 -Ofast -fopenmp -o run run.c -lm
-```
-
-
-Finally, we run the executable and collected the outocomes:
-
-
-```bash 
-./run stories260K.bin
-
-```
-
-To sum up, we collected everything in tables:
-
-Sifives:
-
-| parameters |   flags                |  tok/s          |
-| ------     |    -----               | -----           |
-|      260K  |   -O3                  | 301.775148      |
-|    260k    |   -O3 -fopenmp         |      678.191489 |
-|    260k    |   -Ofast               |    718.309859   |
+We run it on SIFIVE machines (4 cores) and achieved this:
 
 | parameters |   flags                |  tok/s          |
 | ------     |    -----               | -----           |
@@ -95,15 +77,8 @@ Sifives:
 |   42M      |   -O3                  | 1.768644        | 
 |   42M      |   -O3 -fopenmp         |      6.462453   |
 |   42M      |   -Ofast               |   6.486090      | 
-
  
-Milkvs:
-
-| parameters |   flags                |  tok/s          |
-| ------     |    -----               | -----           |
-|   260K     |   -O3                  |    876.288660   |
-|   260k     |   -O3 -fopenmp         |    508.547009   |
-|   260k     |   -Ofast               |  580.865604     |
+Running it on MILKV machines (64 cores) leads to better results:
 
 | parameters |   flags                |  tok/s          |
 | ------     |    -----               | -----           |
@@ -117,13 +92,13 @@ Milkvs:
 |   42M      |   -O3 -fopenmp         |   39.293380     |
 |   42M      |   -Ofast               |   38.860104     | 
 
+For a better visualization we provided a notebook with some plots (see plots folder).
 
 ## Performance characterization
 
-### Performance overview with Perf stat
-First perf command we tried is **perf stat**.
+Let's go deeper into the analysis exploiting **perf** linux command.
 
-Considering Sifives, we run perf stat to all models and collected the outcomes:
+Considering the 4-cores machine, perf record does not work, but we can have a general overview by using perf stat command:
 
 ```bash 
 perf stat ./run stories15M.bin
@@ -140,8 +115,6 @@ perf stat ./run stories15M.bin
        63810539123      branches                         #  883.992 M/sec
           29783265      branch-misses                    #    0.05% of all branches
 
-
-Same for 42M and 110M:
 
 42M model:
 
@@ -166,11 +139,8 @@ for 110M:
          146621514      branch-misses                    #    0.06% of all branches
 
 
-### Recording with Perf Record
 
-Note: we coudln't execute perf record command on sifive nodes.
-
-So far, we tried the following commands:
+For what about the 64-cores nodes, we can exploit perf record command, sampling the events we want as shown:
 
 ```bash 
 
@@ -184,46 +154,36 @@ perf record -g -e instructions -- ./run stories15M.bin
 
 ```
 
-
-Since we didn't enable the -g flag, we re-compiled the code as follows:
-
+To read the outcome:
 
 ```bash 
 
-gcc -g -O3 -fopenmp -o run run.c -lm
+perf report
 
 ```
 
-We applied the same reasoning for 42M and 110M models.
+## Profiling with Flamegraph
+In addition, we can use the perf command to sample the stack of all processes and produce a flamegraph.
 
-
-### Profiling with Flamegraph
-
-to get a more readable output data, we proceeded as follows to represent the data as flamegraph:
-
+We clone brendan Gregg repo:
 ```bash 
-
 git clone https://github.com/brendangregg/FlameGraph
-
 ```
-```bash 
 
+we sample the stack:
+```bash 
 perf record -g -e cycles -- ./run stories15M.bin
-
 ```
 
+we collapse the stack with Brendan Gregg's scripts
 ```bash 
-
 perf script | ../FlameGraph/stackcollapse-perf.pl > out.perf-folded
-
 ```
-
-
+we produce the flamegprah
 ```bash 
-
 ../FlameGraph/flamegraph.pl out.perf-folded > perf.svg
-
 ```
-This is what we got so far:
+
+We provided two flamegraph examples, a first one we run Llama on all 64 cores and a second one where we run it concurrently on a single core:
 
 ![](perf.svg)
