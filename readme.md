@@ -179,6 +179,6 @@ and produce the flamegprah
 ```
 
 We provided two flamegraph examples, a first one we run Llama on all 64 cores and a second one where we run it concurrently on a single core:
-
-![](img/15M_nopar.svg)
 ![](img/15M_par.svg)
+![](img/15M_nopar.svg)
+
